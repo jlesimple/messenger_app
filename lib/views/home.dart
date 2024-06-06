@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/services/authentification.dart';
-import 'package:messenger_app/views/login.dart';
-import 'package:messenger_app/views/register.dart';
 import 'package:messenger_app/views/user_list.dart';
-
-
+import 'package:messenger_app/views/login.dart';
+import 'package:messenger_app/views/universe.dart';
 
 
 class HomeScreen extends StatefulWidget {
