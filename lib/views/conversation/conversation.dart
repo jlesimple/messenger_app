@@ -13,7 +13,6 @@ class ConversationSelectionScreen extends StatefulWidget {
 
 class _ConversationSelectionScreenState extends State<ConversationSelectionScreen> {
   final PageController _pageController = PageController();
-  Universe? _selectedUniverse;
   Character? _selectedCharacter;
   Future<List<Universe>>? _universesFuture;
   Future<List<Character>>? _charactersFuture;
@@ -41,9 +40,8 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
 
   void _onUniverseSelected(Universe universe) {
     setState(() {
-      _selectedUniverse = universe;
       _loadCharactersForUniverse(universe.id);
-      _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
     });
   }
 
@@ -51,17 +49,17 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
     setState(() {
       _selectedCharacter = character;
       _loadAllConversation(int.parse(character.id));
-      _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Select Conversation')),
+      appBar: AppBar(title: const Text('Select Conversation')),
       body: PageView(
         controller: _pageController,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           _buildUniverseSelection(),
           _buildCharacterSelection(),
@@ -76,11 +74,11 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
       future: _universesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error loading universes'));
+          return const Center(child: Text('Error loading universes'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No universes found'));
+          return const Center(child: Text('No universes found'));
         } else {
           final universes = snapshot.data!;
           return ListView.builder(
@@ -88,6 +86,9 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
             itemBuilder: (context, index) {
               final universe = universes[index];
               return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage('https://mds.sprw.dev/image_data/${universe.image}'),
+                ),
                 title: Text(universe.name),
                 onTap: () => _onUniverseSelected(universe),
               );
@@ -103,11 +104,11 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
       future: _charactersFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error loading characters'));
+          return const Center(child: Text('Error loading characters'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No characters found'));
+          return const Center(child: Text('No characters found'));
         } else {
           final characters = snapshot.data!;
           return ListView.builder(
@@ -115,6 +116,9 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
             itemBuilder: (context, index) {
               final character = characters[index];
               return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(character.image),
+                ),
                 title: Text(character.name),
                 onTap: () => _onCharacterSelected(character),
               );
@@ -125,16 +129,17 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
     );
   }
 
+
   Widget _buildConversationList() {
     return FutureBuilder<List<Conversation>>(
       future: _conversationsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error loading conversations'));
+          return const Center(child: Text('Error loading conversations'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No conversations found'));
+          return const Center(child: Text('No conversations found'));
         } else {
           final conversations = snapshot.data!;
           return ListView.builder(
@@ -147,7 +152,6 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
                     ? conversation.messages.last.content
                     : 'No messages'),
                 onTap: () {
-                  // Navigate to conversation detail view if needed
                 },
               );
             },

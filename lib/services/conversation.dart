@@ -22,7 +22,10 @@ class ConversationService {
     if (response.statusCode == 200) {
       try {
         final List<dynamic> data = jsonDecode(response.body);
-        return data.map((json) => Conversation.fromJson(json)).toList();
+        return data.map((json) {
+          json['image'] = 'https://mds.sprw.dev/image_data/${json['image']}';
+          return Conversation.fromJson(json);
+        }).toList();
       } on FormatException catch (e) {
         print('Error parsing JSON: $e');
         return [];
