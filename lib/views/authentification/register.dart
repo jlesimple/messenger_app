@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/services/authentification.dart';
 import 'package:messenger_app/views/home.dart';
-import 'package:messenger_app/views/login.dart';
+import 'package:messenger_app/views/authentification/login.dart';
 
 class Registerscreen extends StatefulWidget {
   const Registerscreen({Key? key}) : super(key: key);

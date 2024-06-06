@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/services/universe.dart';
 import 'package:messenger_app/models/universe.dart';
-import 'package:messenger_app/views/universe_detail.dart';
-import 'package:messenger_app/views/universe_create.dart';
+import 'package:messenger_app/views/universe/universe_detail.dart';
+import 'package:messenger_app/views/universe/universe_create.dart';
 
 class UniverseView extends StatefulWidget {
   const UniverseView({Key? key}) : super(key: key);

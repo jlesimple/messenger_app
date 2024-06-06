@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/services/authentification.dart';
 import 'package:messenger_app/views/home.dart';
-import 'package:messenger_app/views/login.dart';
+import 'package:messenger_app/views/authentification/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
