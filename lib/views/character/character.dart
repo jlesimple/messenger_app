@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:messenger_app/models/character.dart'; 
 import 'package:messenger_app/services/character.dart'; 
 import 'package:messenger_app/views/character/character_detail.dart'; // Assurez-vous d'importer la vue CharacterDetailView
+import 'package:messenger_app/views/character/character_create.dart'; // Assurez-vous d'importer la vue CharacterCreateView
 
 class CharacterListPage extends StatefulWidget {
   final String universeId;
@@ -26,6 +27,19 @@ class _CharacterListPageState extends State<CharacterListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Characters'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CharacterCreateView(universeId: widget.universeId),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<List<Character>>(
         future: _charactersFuture,
