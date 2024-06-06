@@ -5,13 +5,16 @@ import 'package:messenger_app/models/conversation.dart';
 import 'package:messenger_app/services/universe.dart';
 import 'package:messenger_app/services/character.dart';
 import 'package:messenger_app/services/conversation.dart';
+import 'package:messenger_app/views/conversation/conversation_create.dart';
 
 class ConversationSelectionScreen extends StatefulWidget {
   @override
-  _ConversationSelectionScreenState createState() => _ConversationSelectionScreenState();
+  _ConversationSelectionScreenState createState() =>
+      _ConversationSelectionScreenState();
 }
 
-class _ConversationSelectionScreenState extends State<ConversationSelectionScreen> {
+class _ConversationSelectionScreenState
+    extends State<ConversationSelectionScreen> {
   final PageController _pageController = PageController();
   Character? _selectedCharacter;
   Future<List<Universe>>? _universesFuture;
@@ -25,31 +28,42 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
   }
 
   Future<void> _loadAllUniverse() async {
-    _universesFuture = UniverseService().getAllUniverseInfo().then(
-      (data) => data.map((json) => Universe.fromJson(json)).toList(),
-    );
+    _universesFuture = UniverseService()
+        .getAllUniverseInfo()
+        .then((data) => data.map((json) => Universe.fromJson(json)).toList());
   }
 
   Future<void> _loadCharactersForUniverse(String universeId) async {
-    _charactersFuture = CharacterService().getCharactersByUniverseId(universeId);
+    _charactersFuture =
+        CharacterService().getCharactersByUniverseId(universeId);
   }
 
-  Future<void> _loadAllConversation(int characterId) async {
-    _conversationsFuture = ConversationService().getUserConversations(characterId);
+  Future<void> _loadAllConversation() async {
+    _conversationsFuture = ConversationService().getUserConversations();
   }
 
   void _onUniverseSelected(Universe universe) {
     setState(() {
       _loadCharactersForUniverse(universe.id);
-      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      _pageController.nextPage(
+          duration: const Duration(milliseconds: 300), curve: Curves.ease);
     });
   }
 
   void _onCharacterSelected(Character character) {
     setState(() {
       _selectedCharacter = character;
-      _loadAllConversation(int.parse(character.id));
-      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      _loadAllConversation();
+      _pageController.nextPage(
+          duration: const Duration(milliseconds: 300), curve: Curves.ease);
+    });
+  }
+
+  void _onConversationCreated(Conversation newConversation) {
+    setState(() {
+      _conversationsFuture = _conversationsFuture!.then((conversations) {
+        return [...conversations, newConversation];
+      });
     });
   }
 
@@ -65,6 +79,40 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
           _buildCharacterSelection(),
           _buildConversationList(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_selectedCharacter != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ConversationCreateScreen(
+                  selectedCharacter: _selectedCharacter!,
+                  onConversationCreated: _onConversationCreated,
+                ),
+              ),
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Please select a character first.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -87,7 +135,8 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
               final universe = universes[index];
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage('https://mds.sprw.dev/image_data/${universe.image}'),
+                  backgroundImage: NetworkImage(
+                      'https://mds.sprw.dev/image_data/${universe.image}'),
                 ),
                 title: Text(universe.name),
                 onTap: () => _onUniverseSelected(universe),
@@ -129,7 +178,6 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
     );
   }
 
-
   Widget _buildConversationList() {
     return FutureBuilder<List<Conversation>>(
       future: _conversationsFuture,
@@ -151,8 +199,33 @@ class _ConversationSelectionScreenState extends State<ConversationSelectionScree
                 subtitle: Text(conversation.messages.isNotEmpty
                     ? conversation.messages.last.content
                     : 'No messages'),
-                onTap: () {
-                },
+                trailing: IconButton(
+                  icon: Icon(Icons.message),
+                  onPressed: () {
+                    // Ajouter le code pour créer une conversation avec le personnage sélectionné
+                    if (_selectedCharacter != null) {
+                      // Créer une conversation avec _selectedCharacter
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Error'),
+                            content: Text('Please select a character first.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
               );
             },
           );
