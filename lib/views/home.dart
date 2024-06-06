@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Color(0xFF137c8b),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
-                      child: Icon(Icons.account_balance, size: 40, color: Colors.white), // Icon for universes
+                      child: Icon(Icons.public, size: 40, color: Colors.white), // Icon for universes
                     ),
                   ),
                 ),
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => _logout(context),
               ),
               IconButton(
-                icon: const Icon(Icons.account_balance), // Use a relevant icon for universes
+                icon: const Icon(Icons.public), // Use a relevant icon for universes
                 onPressed: () => _viewAllUniverses(context),
               ),
               IconButton( // Add IconButton for user update

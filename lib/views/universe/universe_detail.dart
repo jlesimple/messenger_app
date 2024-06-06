@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/models/universe.dart';
+import 'package:messenger_app/views/character/character.dart'; // Assurez-vous d'importer la vue CharacterListPage
 
 class UniverseDetailView extends StatelessWidget {
   final Universe universe;
@@ -14,6 +15,19 @@ class UniverseDetailView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(universe.name),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CharacterListPage(universeId: universe.id),
+                ),
+              );
+            },
+            icon: Icon(Icons.group), // Vous pouvez changer l'icône selon vos préférences
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
