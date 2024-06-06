@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const Registerscreen()),
+                MaterialPageRoute(builder: (context) => const RegisterScreen()),
               );
             },
             style: ButtonStyle(

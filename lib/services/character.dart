@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:messenger_app/models/APIresponse.dart';
 import 'package:messenger_app/services/authentification.dart'; 
+import 'package:messenger_app/services/user.dart'; 
 import 'package:messenger_app/models/character.dart'; // Assurez-vous d'importer la classe Character
 
 class CharacterService {

@@ -3,14 +3,14 @@ import 'package:messenger_app/services/authentification.dart';
 import 'package:messenger_app/views/home.dart';
 import 'package:messenger_app/views/authentification/login.dart';
 
-class Registerscreen extends StatefulWidget {
-  const Registerscreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<Registerscreen> createState() => _RegisterscreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterscreenState extends State<Registerscreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_app/services/authentification.dart';
+import 'package:messenger_app/services/user.dart';
 import 'package:messenger_app/models/user.dart';
 
 class AllUsersScreen extends StatefulWidget {
@@ -10,7 +10,7 @@ class AllUsersScreen extends StatefulWidget {
 }
 
 class _AllUsersScreenState extends State<AllUsersScreen> {
-  final AuthentificationService _authService = AuthentificationService();
+  final UserService _userService = UserService();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
         title: const Text('All Users'),
       ),
       body: FutureBuilder(
-        future: _authService.getAllUsers(),
+        future: _userService.getAllUsers(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -33,7 +33,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                 User user = users[index];
                 return ListTile(
                   title: Text('${user.firstName} ${user.lastName}'),
-                  subtitle: Text(user.username), // Optionnel: vous pouvez afficher d'autres informations ici
+                  subtitle: Text(user.username),
                 );
               },
             );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/services/authentification.dart';
-import 'package:messenger_app/views/user/user_list.dart';
+import 'package:messenger_app/services/user.dart';
+import 'package:messenger_app/views/user/user.dart';
 import 'package:messenger_app/views/user/user_update.dart';
 import 'package:messenger_app/views/authentification/login.dart';
 import 'package:messenger_app/views/universe/universe.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,7 +14,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final AuthentificationService _apiService = AuthentificationService();
+  final AuthentificationService _authService = AuthentificationService();
+  final UserService _userService = UserService();
   String? _userName;
 
   @override
@@ -24,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadUserInfo() async {
-    final userInfo = await _apiService.getUserInfo();
+    final userInfo = await _userService.getUserInfo();
     if (userInfo != null) {
       setState(() {
         _userName = userInfo['username'];
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _logout(BuildContext context) async {
-    await _apiService.logout();
+    await _authService.logout();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -76,9 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: GestureDetector(
                   onTap: () => _viewAllUsers(context),
                   child: Card(
-                    color: Color(0xFF137c8b),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
+                    color: const Color(0xFF137c8b),
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
                       child: Icon(Icons.person, size: 40, color: Colors.white), // Icon for users
                     ),
                   ),
@@ -91,9 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: GestureDetector(
                   onTap: () => _viewAllUniverses(context),
                   child: Card(
-                    color: Color(0xFF137c8b),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
+                    color: const Color(0xFF137c8b),
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
                       child: Icon(Icons.public, size: 40, color: Colors.white), // Icon for universes
                     ),
                   ),
@@ -117,15 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.public), // Use a relevant icon for universes
                 onPressed: () => _viewAllUniverses(context),
               ),
-              IconButton( // Add IconButton for user update
-                icon: const Icon(Icons.person_outline), // Use a relevant icon for user update
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const UserUpdateScreen()),
-                  );
-                },
-              ),
             ],
           ),
         ),
@@ -133,3 +125,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
