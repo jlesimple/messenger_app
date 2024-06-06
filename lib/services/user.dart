@@ -26,6 +26,8 @@ class UserService {
     }
   }
 
+  // Méthode pour voir le profil de l'utilisateur
+
   Future<List<User>> getAllUsers() async {
     final token = await getToken();
     if (token == null) {

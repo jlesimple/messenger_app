@@ -23,7 +23,6 @@ class CharacterService {
       try {
         final List<dynamic> data = jsonDecode(response.body);
         return data.map((characterJson) {
-          // Adjust image URL here
           characterJson['image'] = 'https://mds.sprw.dev/image_data/${characterJson['image']}';
           return Character.fromJson(characterJson);
         }).toList();

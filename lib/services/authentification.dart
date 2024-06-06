@@ -62,12 +62,10 @@ class AuthentificationService {
       if (jsonResponse['token'] != null) {
         await saveToken(jsonResponse['token']);
         final tokenParts = jsonResponse['token'].split('.');
-        final payload =
-            json.decode(utf8.decode(base64Url.decode(tokenParts[1].padRight(
+        json.decode(utf8.decode(base64Url.decode(tokenParts[1].padRight(
           tokenParts[1].length + (4 - tokenParts[1].length % 4) % 4,
           '=',
         ))));
-        final id = payload['data']['id'];
       }
       return ApiResponse.fromJson(jsonResponse);
     } else {
@@ -100,4 +98,6 @@ class AuthentificationService {
     await prefs.remove('id');
     await prefs.remove('token');
   }
+
+  getUserInfo() {}
 }
