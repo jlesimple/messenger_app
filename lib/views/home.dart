@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/services/authentification.dart';
 import 'package:messenger_app/views/user/user_list.dart';
+import 'package:messenger_app/views/user/user_update.dart';
 import 'package:messenger_app/views/authentification/login.dart';
 import 'package:messenger_app/views/universe/universe.dart';
 
