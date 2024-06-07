@@ -99,5 +99,11 @@ class AuthentificationService {
     await prefs.remove('token');
   }
 
+  Future<int?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final id = prefs.getString('id');
+    return id != null ? int.tryParse(id) : null;
+  }
+
   getUserInfo() {}
 }

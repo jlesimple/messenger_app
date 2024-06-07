@@ -100,4 +100,32 @@ class CharacterService {
       return null;
     }
   }
+  
+  Future<Map<String, dynamic>> getCharacters(String charactereID) async {
+    final token = await AuthentificationService().getToken();
+    final response = await http.get(
+      Uri.parse('$baseUrl/characters/$charactereID'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    //print('Response status getCharacter: ${response.statusCode}');
+    //print('Response body getCharacter: ${response.body}');
+
+    if (response.statusCode == 200) {
+      try {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        return data;
+      } on FormatException catch (e) {
+        print('Error parsing JSON: $e');
+        return {};
+      }
+    } else {
+      print('Failed to load character info: ${response.body}');
+      return {};
+    }
+  }
+
 }
