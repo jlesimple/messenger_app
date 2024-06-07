@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/services/authentification.dart';
-import 'package:messenger_app/views/user/user.dart';
 import 'package:messenger_app/views/authentification/login.dart';
+import 'package:messenger_app/views/conversation/conversation.dart'; // Importez la vue ConversationsListView
 import 'package:messenger_app/views/universe/universe.dart';
-import 'package:messenger_app/views/conversation/conversation.dart';
+import 'package:messenger_app/views/user/user.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -53,10 +53,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _selectConversation(BuildContext context) {
+  // Remplacez _selectConversation pour naviguer vers ConversationListView
+  void _viewAllConversations(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ConversationSelectionScreen()),
+      MaterialPageRoute(builder: (context) => ConversationListView()),
     );
   }
 
@@ -77,30 +78,30 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.4, // 40% of screen width
-                height: MediaQuery.of(context).size.width * 0.4, // Same height as width
+                width: MediaQuery.of(context).size.width * 0.4,
+                height: MediaQuery.of(context).size.width * 0.4,
                 child: GestureDetector(
                   onTap: () => _viewAllUsers(context),
                   child: Card(
-                    color: Color(0xFF137c8b),
+                    color: const Color(0xFF137c8b),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
-                      child: Icon(Icons.person, size: 40, color: Colors.white), // Icon for users
+                      child: const Icon(Icons.person, size: 40, color: Colors.white),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 20),
               Container(
-                width: MediaQuery.of(context).size.width * 0.4, // 40% of screen width
-                height: MediaQuery.of(context).size.width * 0.4, // Same height as width
+                width: MediaQuery.of(context).size.width * 0.4,
+                height: MediaQuery.of(context).size.width * 0.4,
                 child: GestureDetector(
                   onTap: () => _viewAllUniverses(context),
                   child: Card(
-                    color: Color(0xFF137c8b),
+                    color: const Color(0xFF137c8b),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
-                      child: Icon(Icons.public, size: 40, color: Colors.white), // Icon for universes
+                      child: const Icon(Icons.public, size: 40, color: Colors.white),
                     ),
                   ),
                 ),
@@ -109,15 +110,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 20),
           Container(
-            width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
-            height: MediaQuery.of(context).size.width * 0.4, // Same height as width
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.width * 0.4,
             child: GestureDetector(
-              onTap: () => _selectConversation(context),
+              onTap: () => _viewAllConversations(context), // Utilisez la méthode pour afficher toutes les conversations
               child: Card(
-                color: Color(0xFF137c8b),
+                color: const Color(0xFF137c8b),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Icon(Icons.chat, size: 40, color: Colors.white), // Icon for conversation
+                  child: const Icon(Icons.chat, size: 40, color: Colors.white),
                 ),
               ),
             ),
@@ -126,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
-          padding: const EdgeInsets.only(top: 10.0), // Add space between bottom of screen and bottom app bar
+          padding: const EdgeInsets.only(top: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -135,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => _logout(context),
               ),
               IconButton(
-                icon: const Icon(Icons.public), // Use a relevant icon for universes
+                icon: const Icon(Icons.public),
                 onPressed: () => _viewAllUniverses(context),
               ),
             ],
