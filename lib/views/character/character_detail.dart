@@ -22,7 +22,7 @@ class _CharacterDetailViewState extends State<CharacterDetailView> {
   }
 
   Future<void> _regenerateDescription() async {
-    final regeneratedCharacter = await _characterService.regenerateCharacterDescription(_character.universeId, _character.name);
+    final regeneratedCharacter = await _characterService.regenerateCharacterDescription(_character.universeId, _character.id, _character.name);
     if (regeneratedCharacter != null) {
       setState(() {
         _character = regeneratedCharacter;

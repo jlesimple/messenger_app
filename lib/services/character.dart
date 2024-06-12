@@ -125,14 +125,14 @@ class CharacterService {
     }
   }
 
-  Future<Character?> regenerateCharacterDescription(String universeId, String characterName) async {
+  Future<Character?> regenerateCharacterDescription(String universeId, String characterId, String characterName) async {
     final token = await _getToken();
     if (token == null) {
       throw Exception('Token is missing');
     }
 
     final response = await http.put(
-      Uri.parse('$baseUrl/universes/$universeId'),
+      Uri.parse('$baseUrl/universes/$universeId/characters/$characterId'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
