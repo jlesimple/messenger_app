@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_app/services/character.dart';
 import 'package:messenger_app/services/conversation.dart';
+import 'package:messenger_app/views/conversation/message.dart';
 
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({Key? key}) : super(key: key);
@@ -28,8 +29,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   Future<void> _loadAllConversation() async {
-    final allConversation =
-        await _apiConversationService.getAllConversation();
+    final allConversation = await _apiConversationService.getAllConversation();
     setState(() {
       _allConversation = allConversation;
     });
@@ -43,8 +43,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   Future<void> _loadCharactersForUniverse(String universeId) async {
-    final charactersInUniverse =
-        await _apiConversationService.getCharactersByUniverse(universeId);
+    final charactersInUniverse = await _apiConversationService.getCharactersByUniverse(universeId);
     setState(() {
       characters = charactersInUniverse;
       selectedCharacter = null;
@@ -54,8 +53,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   void _createConversation() async {
     final selectedCharacter = this.selectedCharacter;
 
-    final response =
-        await _apiConversationService.createConversation(selectedCharacter!);
+    final response = await _apiConversationService.createConversation(selectedCharacter!);
 
     if (response.success) {
       _loadAllConversation();
@@ -78,6 +76,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
         _message = response.message;
       });
     }
+  }
+
+  void _onConversationTap(Map<String, dynamic> conversation) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MessagePage(
+          conversationId: conversation['id'],
+          characterId: conversation['character_id'].toString(), // Passez l'ID du personnage ici
+        ),
+      ),
+    );
   }
 
   @override
@@ -110,8 +120,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 ],
               ),
               child: FutureBuilder<Map<String, dynamic>>(
-                future: _getCharacterById(
-                    conversation['character_id'].toString()),
+                future: _getCharacterById(conversation['character_id'].toString()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const ListTile(
@@ -129,13 +138,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               'https://mds.sprw.dev/image_data/${character['image']}',
                               width: 50,
                               height: 50,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(Icons.error),
+                              errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
                             )
                           : const Icon(Icons.person),
                       title: Text(character['name'] ?? 'Unknown'),
-                      onTap: () =>
-                          _onConversationTap(conversation), // Ajout de cette ligne
+                      onTap: () => _onConversationTap(conversation),
                     );
                   }
                 },
@@ -149,81 +156,77 @@ class _ConversationScreenState extends State<ConversationScreen> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-                  return AlertDialog(
-                    title: const Text('Créer une conversation'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        DropdownButton<String>(
-                          value: selectedUniverse,
-                          hint: const Text('Sélectionnez un univers'),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedUniverse = newValue;
-                            });
-                            if (newValue != null) {
-                              _loadCharactersForUniverse(newValue);
+              return AlertDialog(
+                title: const Text('Créer une conversation'),
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      DropdownButton<String>(
+                        value: selectedUniverse,
+                        hint: const Text('Sélectionnez un univers'),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedUniverse = newValue;
+                          });
+                          if (newValue != null) {
+                            _loadCharactersForUniverse(newValue);
+                          }
+                        },
+                        items: universes
+                            .map((e) => DropdownMenuItem<String>(
+                                  value: e['id'].toString(),
+                                  child: Text(e['name']),
+                                ))
+                            .toList(),
+                      ),
+                      if (selectedUniverse != null)
+                        FutureBuilder<List<Map<String, dynamic>>>(
+                          future: _apiConversationService.getCharactersByUniverse(selectedUniverse!),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return const Text('Erreur de chargement');
+                            } else {
+                              final characters = snapshot.data ?? [];
+                              return DropdownButton<String>(
+                                value: selectedCharacter,
+                                hint: const Text('Sélectionnez un personnage'),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedCharacter = newValue;
+                                  });
+                                },
+                                items: characters
+                                    .map((e) => DropdownMenuItem<String>(
+                                          value: e['id'].toString(),
+                                          child: Text(e['name']),
+                                        ))
+                                    .toList(),
+                              );
                             }
                           },
-                          items: universes
-                              .map((e) => DropdownMenuItem<String>(
-                                    value: e['id'].toString(),
-                                    child: Text(e['name']),
-                                  ))
-                              .toList(),
                         ),
-                        if (selectedUniverse != null)
-                          FutureBuilder<List<Map<String, dynamic>>>(
-                            future: _apiConversationService
-                                .getCharactersByUniverse(selectedUniverse!),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return const Text('Erreur de chargement');
-                              } else {
-                                final characters = snapshot.data ?? [];
-                                return DropdownButton<String>(
-                                  value: selectedCharacter,
-                                  hint:
-                                      const Text('Sélectionnez un personnage'),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedCharacter = newValue;
-                                    });
-                                  },
-                                  items: characters
-                                      .map((e) => DropdownMenuItem<String>(
-                                            value: e['id'].toString(),
-                                            child: Text(e['name']),
-                                          ))
-                                      .toList(),
-                                );
-                              }
-                            },
-                          ),
-                      ],
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Annuler'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          _createConversation();
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Créer'),
-                      ),
                     ],
-                  );
-                },
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Annuler'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _createConversation();
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Créer'),
+                  ),
+                ],
               );
             },
           );
@@ -233,10 +236,5 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ),
       ),
     );
-  }
-
-  // Ajout de la méthode _onConversationTap
-  void _onConversationTap(Map<String, dynamic> conversation) {
-    // Implémentez le code pour gérer le tap sur la conversation ici
   }
 }
