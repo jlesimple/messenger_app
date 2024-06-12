@@ -111,9 +111,6 @@ class CharacterService {
       },
     );
 
-    //print('Response status getCharacter: ${response.statusCode}');
-    //print('Response body getCharacter: ${response.body}');
-
     if (response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -128,4 +125,36 @@ class CharacterService {
     }
   }
 
+  Future<Character?> regenerateCharacterDescription(String universeId, String characterName) async {
+    final token = await _getToken();
+    if (token == null) {
+      throw Exception('Token is missing');
+    }
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/universes/$universeId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({'name': characterName}),
+    );
+
+    print('Response status regenerateCharacterDescription: ${response.statusCode}');
+    print('Response body regenerateCharacterDescription: ${response.body}');
+
+    if (response.statusCode == 200) {
+      try {
+        final characterJson = jsonDecode(response.body);
+        characterJson['image'] = 'https://mds.sprw.dev/image_data/${characterJson['image']}';
+        return Character.fromJson(characterJson);
+      } on FormatException catch (e) {
+        print('Error parsing JSON: $e');
+        return null;
+      }
+    } else {
+      print('Failed to regenerate character description: ${response.body}');
+      return null;
+    }
+  }
 }
